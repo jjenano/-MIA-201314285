@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1469802324 source:/home/jjenano/Documentos/Code Blocks/Proyecto1MIA/main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
