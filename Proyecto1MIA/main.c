@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include <stdbool.h>
 
 typedef struct Mkdisk
 {
@@ -72,14 +73,19 @@ int DevolverValorInt (char * palabra)
     return numero;
 }
 
-char DevolverValorChar (char * palabra)
+bool ValidarNombre(char cadena[100], char ext[4])
 {
-    char * SplitComandos;
-    SplitComandos = strtok(palabra,"::");
-    SplitComandos = strtok(NULL, "::");
-    char numero[100];
-    strcpy(numero, SplitComandos);
-    return *numero;
+    int i;
+
+    for (i = 0; i < 97; i++)
+    {
+        if (cadena[i] == ext[0] && cadena[i+1] == ext[1] && cadena[i+2] == ext[2] && cadena[i+3] == ext[3] )
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 char** tokens;
@@ -120,27 +126,75 @@ while (d==0)
                             SplitComandos = strtok((*(tokens + r)),"::");
                             SplitComandos = strtok(NULL, "::");
                             cmdDisk->unit = *SplitComandos;
-                            //printf ("Splitcomando -> %s", SplitComandos);
-                            //printf("unit -> %c \n", cmdDisk->unit);
                         }
                         else if (strncasecmp((*(tokens + r)), "-path", 5) == 0)
                         {
-                            int d = strncasecmp((*(tokens + r)), "-path", 5);
+                            char * SplitComandos;
+                            SplitComandos = strtok((*(tokens + r)),"::");
+                            SplitComandos = strtok(NULL, "::");
+                            //SplitComandos = strtok(NULL, "\"");
 
-                            printf("si entra al path %d", d);
+                            strcpy(cmdDisk->path, SplitComandos);
+
                         }
                         else if (strncasecmp((*(tokens + r)), "-name", 5) == 0)
                         {
-                            printf("si entra al name");
+                            //printf("si entra al name");
+
+                            char * SplitComandos;
+                            SplitComandos = strtok((*(tokens + r)),"::");
+                            SplitComandos = strtok(NULL, "::");
+                            //SplitComandos = strtok(NULL, "\"");
+
+                            strcpy(cmdDisk->name, SplitComandos);
+                        }
+                        else
+                        {
+                            //SI VIENE UNA DIAGONAL QUE SIGA ESCRIBIENDO EL MISMO MKDISK
+                            printf("Escriba comandos \n");
+                            fgets(Linea,60,stdin);
+                            tokens = str_split(Linea, ' ');
                         }
 
                          // printf("token = [%s] \n", *(tokens + r));
                     }
 
-                    printf("size -> %d \n", cmdDisk->size);
+                    /*printf("size -> %d \n", cmdDisk->size);
                     printf("unit -> %s \n", &cmdDisk->unit);
-                    printf("path -> %s", cmdDisk->path);
-                    printf("name -> %s", cmdDisk->name);
+                    printf("path -> %s\n", cmdDisk->path);
+                    printf("name -> %s\n", cmdDisk->name);*/
+
+                    printf("********VALIDANDO EL MKDISK********* \n");
+
+                    if (cmdDisk->size > 0 && strcmp(cmdDisk->path, "") != 0 && strcmp(cmdDisk->name, "") != 0)
+                    {
+                        //mkdisk -size::66 -path::hola +unit::m -name::adios
+                        //mkdisk -size::66 -path::hola -name::adios.dsk +unit::m
+                        //VALIDANDO UNIT
+                        if ( cmdDisk->unit == 'k' || cmdDisk->unit == 'm')
+                        {
+                            char ext [4] = {'.', 'd', 's', 'k'};
+                            //VALIDANDO NAME
+                            if (ValidarNombre(cmdDisk->name, ext))
+                            {
+                               printf("************SI TIENE EXTENSION************");
+                            }
+                            else
+                            {
+                                printf("**************ERROR EN EL COMANDO NAME************** \n");
+                            }
+                        }
+                        else
+                        {
+                            printf("**************ERROR EN EL COMANDO UNIT************** \n");
+                        }
+                    }
+                    else
+                    {
+                        printf("**************ERROR ALGUNO DE LOS PARAMETROS ESTA VACIO************** \n");
+                    }
+
+
                 }
 
                 //free(*(tokens + i));
