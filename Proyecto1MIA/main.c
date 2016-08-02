@@ -178,6 +178,8 @@ while (d==0)
                             if (ValidarNombre(cmdDisk->name, ext))
                             {
                                printf("************SI TIENE EXTENSION************");
+                               //AIIIIIIIIIIUUUUUUUDAAAAAAAAAAAAA
+
                             }
                             else
                             {
@@ -194,15 +196,54 @@ while (d==0)
                         printf("**************ERROR ALGUNO DE LOS PARAMETROS ESTA VACIO************** \n");
                     }
 
-
                 }
+                else if (strcasecmp((*(tokens + i)), "rmdisk") ==0 )
+                {
+                    Mkdisk * cmdRDisk = malloc(sizeof(Mkdisk));
+                    int r;
+                    for (r = (i+1); *(tokens + r); r++)
+                    {
+                        if (strncasecmp((*(tokens + r)), "-path", 5) == 0)
+                        {
+
+                            char * SplitComandos;
+                            SplitComandos = strtok((*(tokens + r)),"::");
+                            SplitComandos = strtok(NULL, "::");
+                            //SplitComandos = strtok(NULL, "\"");
+
+                            strcpy(cmdRDisk->path, SplitComandos);
+
+                        }
+                    }
+
+                    if (strcmp(cmdRDisk->path, "") != 0)
+                    {
+                        int opcion;
+                        printf("***********¿Seguro que desea borrar el archivo? ************** \n 1. Si \n 2. No \n \n");
+                        scanf("%d", &opcion);
+
+                        if (opcion == 1)
+                        {
+                            //AIIIIIIIIIIIIIIIIIUUUUUUUUUUUUUUUUDA
+                        }
+                        else
+                        {
+                            printf("*************NO SE ELMINARA EL ARCHIVO*************");
+                        }
+                    }
+                    else
+                    {
+                        printf("***********ERROR NO SE ESPECIFICO EL PATH**************");
+                    }
+                }
+
+
 
                 //free(*(tokens + i));
             }
             printf("\n");
             free(tokens);
         }
-
     }
 
     return 0;
