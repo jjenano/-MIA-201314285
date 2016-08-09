@@ -123,7 +123,7 @@ bool ValidarNombre(char cadena[100], char ext[4])
 }
 
 char** tokens;
-char Linea[60];
+char Linea[150];
 char * SplitComandos;
 int d=0;
 
@@ -133,6 +133,8 @@ while (d==0)
     {
         printf("Escriba comandos \n");
         fgets(Linea,150,stdin);
+        fflush(stdin);
+        Linea[strlen(Linea)-1] = '\0';
         tokens = str_split(Linea, ' ');
         if (tokens)
         {
@@ -213,7 +215,7 @@ while (d==0)
                             if (ValidarNombre(cmdDisk->name, ext))
                             {
                                //mkdisk -size::66 -name::"adios.dsk" +unit::m -path::"/home/jjenano/Documentos/Discos/"
-                               //mkdisk -size::66 -name::prueba.dsk -path::/home/jjenano/Documentos/Discos/
+                               //mkdisk -size::1 -name::prueba.dsk -path::/home/jjenano/Documentos/Discos/
                                printf("************SI TIENE EXTENSION************ \n");
 
 
@@ -232,10 +234,10 @@ while (d==0)
                                    {
                                        tamanio = 1024 * 1024 * cmdDisk->size;
                                    }
-                                   char tamaArchivo[tamanio];
-                                   memset(tamaArchivo, 0, sizeof(tamaArchivo));
+                                   char tamaArchivo1[tamanio];
+                                   memset(tamaArchivo1, 0, sizeof(tamaArchivo1));
 
-                                   fwrite(tamaArchivo, sizeof(tamaArchivo), 1, archivo);
+                                   fwrite(tamaArchivo1, sizeof(tamaArchivo1), 1, archivo);
 
 
                                    //AQUI SE CREA EN MBR DEL ARCHIVO
@@ -318,14 +320,24 @@ while (d==0)
                         int opcion;
                         printf("***********¿Seguro que desea borrar el archivo? ************** \n 1. Si \n 2. No \n \n");
                         scanf("%d", &opcion);
-
+                        // rmdisk -path::/home/jjenano/Documentos/Discos/prueba.dsk
+                        printf(" del comando %s \n", cmdRDisk->path);
                         if (opcion == 1)
                         {
-                            //AIIIIIIIIIIIIIIIIIUUUUUUUUUUUUUUUUDA
+                            char ruta [100];
+                            strcpy(ruta, cmdRDisk->path);
+
+                            printf(" del vector aqui %s \n", ruta);
+
+                            FILE * archivo = fopen(ruta, "r+");
+                            if (archivo != NULL)
+                            {
+                               remove(cmdRDisk->path);
+                            }
                         }
                         else
                         {
-                            printf("*************NO SE ELMINARA EL ARCHIVO*************");
+                            printf("*************NO SE ELMINARA EL DISCO*************");
                         }
                     }
                     else
